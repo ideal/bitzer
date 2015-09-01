@@ -1,4 +1,4 @@
 Bitzer
 ======
 
-Manage and running processes.
+Running and managing processes.
