@@ -4,6 +4,7 @@ set(bitzer_SRCS
     strutil.c
     sighandler.c
     context.c
+    rbtree.c
 )
 
 add_executable(bitzer ${bitzer_SRCS})
