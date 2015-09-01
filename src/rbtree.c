@@ -37,7 +37,7 @@ rbtree_node_t *rbtree_min(rbtree_t *tree)
 static rbtree_node_t *
 rbtree_node_max(rbtree_node_t *node, rbtree_node_t *sentinel)
 {
-    /* traverse left links */
+    /* traverse right links */
 
     while (node->right != sentinel) {
         node = node->right;
