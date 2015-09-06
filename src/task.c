@@ -19,6 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "bitzer.h"
+
 task_t *task_create()
 {
     return NULL;

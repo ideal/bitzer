@@ -75,11 +75,11 @@ int signal_init(bz_log_t *log)
         if (sigaction(sig->signo, &sa, NULL) < 0) {
             bz_log_error(log, "sigaction(%s) failed: %s",
                          sig->signame, strerror(errno));
-            return BZ_ERROR;
+            return ERROR;
         }
     }
 
-    return BZ_OK;
+    return OK;
 }
 
 void signal_close(bz_log_t *log)

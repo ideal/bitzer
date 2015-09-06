@@ -28,6 +28,9 @@ struct context_s {
     void *conf;
     struct bitzer_s *instance;
     bz_log_t *log;
+    struct list_head tasks_list;
+    rbtree_t  tasks_rbtree;
+    rbtree_node_t sentinel;
 };
 
 typedef struct context_s context_t;

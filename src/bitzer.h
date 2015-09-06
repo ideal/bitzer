@@ -51,10 +51,17 @@ typedef intptr_t     bz_flag_t;
 #define BZ_NOMEM  -3
 #define BZ_ABORT  -4
 
+#define OK    BZ_OK
+#define ERROR BZ_ERROR
+
 #include "log.h"
 #include "util.h"
 #include "sighandler.h"
 #include "strutil.h"
+#include "list.h"
+#include "rbtree.h"
+#include "task.h"
+
 #include "context.h"
 
 struct bitzer_s {
