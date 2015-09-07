@@ -414,6 +414,22 @@ static void bz_post_run(struct bitzer_s *bz)
     BZ_FREE_IF_ALLOC(bz, pid_file);
 }
 
+static void bz_signal_callback(void *arg)
+{
+    // not graceful termination
+    if (bz_quit) {
+        exit(2);
+    }
+
+    // graceful termination
+    if (bz_terminate) {
+        // here `context` is global variable
+        context_close(context);
+        bz_post_run((struct bitzer_s *)arg);
+        exit(1);
+    }
+}
+
 static void bz_run(struct bitzer_s *bz)
 {
     context_t *ctx;
@@ -424,6 +440,7 @@ static void bz_run(struct bitzer_s *bz)
     }
 
     context = ctx;
+    context_set_signal_callback(ctx, bz_signal_callback, (void *)bz);
     context_run(ctx);
 
     context_close(ctx);
