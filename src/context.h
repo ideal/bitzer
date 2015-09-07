@@ -24,10 +24,18 @@
 
 #include "bitzer.h"
 
+typedef void (*signal_callback_t)(void *arg);
+
+typedef struct signal_task_s {
+    signal_callback_t callback;
+    void *arg;
+} signal_task_t;
+
 struct context_s {
     void *conf;
     struct bitzer_s *instance;
     bz_log_t *log;
+    signal_task_t signal_task;
     struct list_head tasks_list;
     rbtree_t  tasks_rbtree;
     rbtree_node_t sentinel;
@@ -44,6 +52,7 @@ extern sig_atomic_t bz_reopen;
 
 context_t *context_create(struct bitzer_s *bz);
 void context_run(context_t *ctx);
+void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg);
 void context_close(context_t *ctx);
 
 #endif

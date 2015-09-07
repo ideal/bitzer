@@ -52,9 +52,15 @@ signal_t signals[] = {
       signal_handler
     },
 
+    {
+      SIGINT,
+      "SIGINT",
+      "stop",
+      signal_handler
+    },
+
     { SIGTTIN, "SIGTTIN", "", signal_handler },
     { SIGTTOU, "SIGTTOU", "", signal_handler },
-    { SIGINT,  "SIGINT",  "", signal_handler },
     { SIGPIPE, "SIGPIPE", "", SIG_IGN },
 
     { 0, NULL, "", NULL }
@@ -105,6 +111,7 @@ void signal_handler(int signo)
         action  = "shutting down";
         break;
     case signal_value(SIGNAL_TERMINATE):
+    case SIGINT:
         bz_terminate = 1;
         action  = "exiting";
         break;
