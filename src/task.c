@@ -21,9 +21,33 @@
 
 #include "bitzer.h"
 
-task_t *task_create()
+task_t *task_create(context_t *ctx)
 {
-    return NULL;
+    task_t *task;
+
+    task = (task_t *)bz_alloc(sizeof(task_t), ctx->log);
+    if (task == NULL) {
+        bz_log_error(ctx->log, "create task failed");
+        return NULL;
+    }
+
+    task_init(task, ctx);
+
+    return task;
+}
+
+int task_init(task_t *task, context_t *ctx)
+{
+    task->pid = 0;
+    task->start_time  = 0;
+    task->start_count = 0 ;
+    task->log = ctx->log;
+    task->file = NULL;
+    task->args = NULL;
+
+    // NOTE: we have not init list and node
+
+    return OK;
 }
 
 int task_run(task_t *task)

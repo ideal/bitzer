@@ -28,13 +28,15 @@ typedef struct task_s {
     pid_t  pid;
     time_t start_time;
     size_t start_count;
+    bz_log_t *log;
     const char *file;
     const char * const *args;
     struct list_head list;
     rbtree_node_t node;
 } task_t;
 
-task_t *task_create();
+task_t *task_create(context_t *ctx);
+int task_init(task_t *task, context_t *ctx);
 int task_run(task_t *task);
 int task_close(task_t *task);
 

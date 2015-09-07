@@ -45,6 +45,8 @@ typedef intptr_t     bz_int_t;
 typedef uintptr_t    bz_uint_t;
 typedef intptr_t     bz_flag_t;
 
+typedef struct context_s context_t;
+
 #define BZ_OK      0
 #define BZ_ERROR  -1
 #define BZ_AGAIN  -2

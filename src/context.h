@@ -41,8 +41,6 @@ struct context_s {
     rbtree_node_t sentinel;
 };
 
-typedef struct context_s context_t;
-
 extern context_t *context;
 
 extern sig_atomic_t bz_quit;
