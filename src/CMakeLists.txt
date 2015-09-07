@@ -6,6 +6,7 @@ set(bitzer_SRCS
     context.c
     rbtree.c
     task.c
+    alloc.c
 )
 
 add_executable(bitzer ${bitzer_SRCS})

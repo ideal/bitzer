@@ -61,6 +61,7 @@ typedef intptr_t     bz_flag_t;
 #include "list.h"
 #include "rbtree.h"
 #include "task.h"
+#include "alloc.h"
 
 #include "context.h"
 

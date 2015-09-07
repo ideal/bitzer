@@ -36,7 +36,7 @@ context_t *context_create(struct bitzer_s *bz)
 {
     context_t *ctx;
 
-    ctx = (context_t *)malloc(sizeof(context_t));
+    ctx = (context_t *)bz_alloc(sizeof(context_t), bz->log);
     if (ctx == NULL) {
         bz_log_error(bz->log, "create context failed");
         return NULL;
