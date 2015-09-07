@@ -27,6 +27,7 @@ sig_atomic_t  bz_quit;
 sig_atomic_t  bz_terminate;
 sig_atomic_t  bz_reconfigure;
 sig_atomic_t  bz_reopen;
+sig_atomic_t  bz_child;
 
 static int context_sigmask(sigset_t *mask, sigset_t *origmask);
 static int context_event_handler(context_t *ctx);
@@ -80,7 +81,7 @@ void context_run(context_t *ctx)
                 ctx->signal_task.callback(ctx->signal_task.arg);
             }
         } else {
-            bz_log_error(ctx->log, "unexpected return value from pselect %d", ret);
+            bz_log_error(ctx->log, "unexpected return value from pselect: %d", ret);
         }
     }
 }

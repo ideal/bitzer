@@ -49,6 +49,7 @@ extern sig_atomic_t bz_quit;
 extern sig_atomic_t bz_terminate;
 extern sig_atomic_t bz_reconfigure;
 extern sig_atomic_t bz_reopen;
+extern sig_atomic_t bz_child;
 
 context_t *context_create(struct bitzer_s *bz);
 void context_run(context_t *ctx);

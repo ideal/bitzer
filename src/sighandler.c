@@ -59,6 +59,13 @@ signal_t signals[] = {
       signal_handler
     },
 
+    {
+      SIGCHLD,
+      "SIGCHLD",
+      "child",
+      signal_handler
+    },
+
     { SIGTTIN, "SIGTTIN", "", signal_handler },
     { SIGTTOU, "SIGTTOU", "", signal_handler },
     { SIGPIPE, "SIGPIPE", "", SIG_IGN },
@@ -123,6 +130,9 @@ void signal_handler(int signo)
         bz_reopen = 1;
         action  = "reopening logs";
         break;
+    case SIGCHLD:
+        bz_child = 1;
+        action = "handling tasks";
     default:
         break;
     }
