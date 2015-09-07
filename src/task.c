@@ -41,7 +41,7 @@ int task_init(task_t *task, context_t *ctx)
     task->pid = 0;
     task->start_time  = 0;
     task->start_count = 0 ;
-    task->log = ctx->log;
+    task->ctx  = ctx;
     task->file = NULL;
     task->args = NULL;
 

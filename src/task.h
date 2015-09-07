@@ -28,7 +28,7 @@ typedef struct task_s {
     pid_t  pid;
     time_t start_time;
     size_t start_count;
-    bz_log_t *log;
+    context_t *ctx;
     const char *file;
     const char * const *args;
     struct list_head list;
