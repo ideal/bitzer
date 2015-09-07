@@ -16,5 +16,7 @@
 #cmakedefine HAVE_POSIX_MEMALIGN
 #cmakedefine HAVE_MEMALIGN
 #cmakedefine HAVE_GETOPT_LONG
+#cmakedefine HAVE_GETIFADDRS
+#cmakedefine HAVE_PSELECT
 
 #endif
