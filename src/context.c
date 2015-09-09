@@ -101,7 +101,7 @@ static int context_sigmask(sigset_t *mask, sigset_t *origmask)
     sigaddset(mask, signal_value(SIGNAL_RECONFIGURE));
     sigaddset(mask, signal_value(SIGNAL_REOPEN));
 
-    return sigprocmask(SIG_SETMASK, mask, origmask);
+    return sigprocmask(SIG_BLOCK, mask, origmask);
 }
 
 static int context_event_handler(context_t *ctx)
