@@ -126,11 +126,10 @@ static int context_event_handler(context_t *ctx)
         }
         task = context_find_task(ctx, pid);
         if (!task) {
-            bz_log_error(ctx->log, "process finished but no related task found: %d", pid);
+            bz_log_error(ctx->log, "process finished but no related task found, pid: %d", pid);
             continue;
         }
         if (context_restart_task(ctx, task) != OK) {
-            bz_log_error(ctx->log, "restart task failed: %s", task->name);
             continue;
         }
     }
@@ -168,5 +167,18 @@ static task_t *context_find_task(context_t *ctx, pid_t pid)
 
 static int context_restart_task(context_t *ctx, task_t *task)
 {
-    return OK;
+    // first remove from list and rbtree
+    list_del(&task->list);
+    rbtree_delete(&ctx->tasks_rbtree, &task->node);
+
+    if (task_run(task) == OK) {
+        // add to list and rbtree again
+        list_add(&task->list, &ctx->tasks_list);
+        rbtree_insert(&ctx->tasks_rbtree, &task->node);
+        bz_log(ctx->log, BZ_LOG_INFO, "restarting task succeed, name: %s", task->name);
+        return OK;
+    }
+
+    bz_log_error(ctx->log, "restarting task failed, name: %s", task->name);
+    return ERROR;
 }
