@@ -59,6 +59,11 @@ context_t *context_create(struct bitzer_s *bz)
     return ctx;
 }
 
+int context_init(context_t *ctx)
+{
+    return OK;
+}
+
 void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg)
 {
     ctx->signal_task.callback = cb;
@@ -90,6 +95,8 @@ void context_run(context_t *ctx)
 
 void context_close(context_t *ctx)
 {
+    // finish tasks
+
     free(ctx);
 }
 
@@ -167,13 +174,11 @@ static task_t *context_find_task(context_t *ctx, pid_t pid)
 
 static int context_restart_task(context_t *ctx, task_t *task)
 {
-    // first remove from list and rbtree
-    list_del(&task->list);
+    // first remove from rbtree
     rbtree_delete(&ctx->tasks_rbtree, &task->node);
 
     if (task_run(task) == OK) {
-        // add to list and rbtree again
-        list_add(&task->list, &ctx->tasks_list);
+        // add to rbtree again
         rbtree_insert(&ctx->tasks_rbtree, &task->node);
         bz_log(ctx->log, BZ_LOG_INFO, "restarting task succeed, name: %s", task->name);
         return OK;

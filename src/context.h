@@ -50,6 +50,7 @@ extern sig_atomic_t bz_reopen;
 extern sig_atomic_t bz_child;
 
 context_t *context_create(struct bitzer_s *bz);
+int context_init(context_t *ctx);
 void context_run(context_t *ctx);
 void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg);
 void context_close(context_t *ctx);

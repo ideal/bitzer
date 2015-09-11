@@ -439,6 +439,10 @@ static void bz_run(struct bitzer_s *bz)
         return;
     }
 
+    if (context_init(ctx) != BZ_OK) {
+        return;
+    }
+
     context = ctx;
     context_set_signal_callback(ctx, bz_signal_callback, (void *)bz);
     context_run(ctx);

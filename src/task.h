@@ -24,6 +24,12 @@
 
 #include "bitzer.h"
 
+enum task_status_e {
+    TASK_INIT = 0,
+    TASK_RUNNING,
+    TASK_FINISHED,
+};
+
 typedef struct task_s {
     pid_t  pid;
     time_t start_time;
@@ -34,6 +40,7 @@ typedef struct task_s {
     const char * const *args;
     struct list_head list;
     rbtree_node_t node;
+    unsigned int status:4;
 } task_t;
 
 task_t *task_create(context_t *ctx);

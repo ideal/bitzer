@@ -45,6 +45,7 @@ int task_init(task_t *task, context_t *ctx)
     task->file = NULL;
     task->name = NULL;
     task->args = NULL;
+    task->status = TASK_INIT;
 
     // NOTE: we have not init list and node
 
