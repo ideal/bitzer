@@ -30,6 +30,7 @@ typedef struct task_s {
     size_t start_count;
     context_t *ctx;
     const char *file;
+    const char *name;
     const char * const *args;
     struct list_head list;
     rbtree_node_t node;

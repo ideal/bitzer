@@ -31,6 +31,8 @@ sig_atomic_t  bz_child;
 
 static int context_sigmask(sigset_t *mask, sigset_t *origmask);
 static int context_event_handler(context_t *ctx);
+static task_t *context_find_task(context_t *ctx, pid_t pid);
+static int context_restart_task(context_t *ctx, task_t *task);
 
 context_t *context_create(struct bitzer_s *bz)
 {
@@ -105,6 +107,66 @@ static int context_sigmask(sigset_t *mask, sigset_t *origmask)
 }
 
 static int context_event_handler(context_t *ctx)
+{
+    int status;
+    pid_t pid;
+    task_t *task;
+
+    if (!bz_child) {
+        return OK;
+    }
+
+    while (1) {
+        pid = waitpid(-1, &status, WNOHANG);
+        if (pid == 0) {
+            break;
+        } else if (pid < 0) {
+            bz_log_error(ctx->log, "error at waitpid: %s", strerror(errno));
+            break;
+        }
+        task = context_find_task(ctx, pid);
+        if (!task) {
+            bz_log_error(ctx->log, "process finished but no related task found: %d", pid);
+            break;
+        }
+        if (context_restart_task(ctx, task) != OK) {
+            bz_log_error(ctx->log, "restart task failed: %s", task->name);
+            break;
+        }
+    }
+
+    return OK;
+}
+
+static task_t *context_find_task(context_t *ctx, pid_t pid)
+{
+    rbtree_key_t key;
+    rbtree_node_t *node, *sentinel;
+
+    key  = pid;
+    node = ctx->tasks_rbtree.root;
+    sentinel = ctx->tasks_rbtree.sentinel;
+
+    while (node != sentinel) {
+
+        if (key < node->key) {
+            node = node->left;
+            continue;
+        }
+
+        if (key > node->key) {
+            node = node->right;
+            continue;
+        }
+
+        return rbtree_entry(node, task_t, node);
+    }
+
+    /* not found */
+    return NULL;
+}
+
+static int context_restart_task(context_t *ctx, task_t *task)
 {
     return OK;
 }
