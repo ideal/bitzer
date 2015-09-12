@@ -45,11 +45,11 @@ int task_init(task_t *task, context_t *ctx)
     task->start_time  = 0;
     task->start_count = 0 ;
     task->ctx  = ctx;
-    task->file = NULL;
+    task->path = NULL;
     task->name = NULL;
     task->args = NULL;
     task->status = TASK_INIT;
-    task->log_file = NULL;
+    task->log_path = NULL;
 
     // NOTE: we have not init list and node
 
@@ -68,23 +68,23 @@ static int task_redirect_io(task_t *task)
     int fd;
     char *ptr;
 
-    if (!task->log_file) {
-        task->log_file = (char *)malloc(strlen(task->ctx->instance->prefix) +
+    if (!task->log_path) {
+        task->log_path = (char *)malloc(strlen(task->ctx->instance->prefix) +
                                        strlen(task->name) + 6);
-        if (!task->log_file) {
+        if (!task->log_path) {
             return ERROR;
         }
 
-        strcpy(task->log_file, task->ctx->instance->prefix);
-        strcat(task->log_file, "/");
-        strcat(task->log_file, task->name);
-        strcat(task->log_file, ".log");
+        strcpy(task->log_path, task->ctx->instance->prefix);
+        strcat(task->log_path, "/");
+        strcat(task->log_path, task->name);
+        strcat(task->log_path, ".log");
     }
 
-    fd = open(task->log_file, O_RDWR | O_APPEND | O_CREAT, 0644);
+    fd = open(task->log_path, O_RDWR | O_APPEND | O_CREAT, 0644);
     if (fd < 0) {
         bz_log_error(task->ctx->log, "open(\"%s\") failed: %s",
-                     task->log_file, strerror(errno));
+                     task->log_path, strerror(errno));
         return ERROR;
     }
 
@@ -124,7 +124,7 @@ int task_run(task_t *task)
     switch(pid) {
     case 0:
         task_redirect_io(task);
-        ret = execv(task->file, task->args);
+        ret = execv(task->path, task->args);
         if (ret < 0) {
             bz_log_error(task->ctx->log,
                          "call execv failed, task: %s, error: %s",
@@ -161,6 +161,6 @@ int task_exit_handler(task_t *task, int status)
 
 int task_close(task_t *task)
 {
-    free(task->log_file);
+    free(task->log_path);
     return OK;
 }
