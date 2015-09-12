@@ -136,6 +136,7 @@ static int context_event_handler(context_t *ctx)
             bz_log_error(ctx->log, "process finished but no related task found, pid: %d", pid);
             continue;
         }
+        task_exit_handler(task, status);
         if (context_restart_task(ctx, task) != OK) {
             continue;
         }

@@ -37,7 +37,7 @@ typedef struct task_s {
     context_t *ctx;
     const char *file;
     const char *name;
-    const char * const *args;
+    char * const *args;
     struct list_head list;
     rbtree_node_t node;
     unsigned int status:4;
@@ -46,6 +46,7 @@ typedef struct task_s {
 task_t *task_create(context_t *ctx);
 int task_init(task_t *task, context_t *ctx);
 int task_run(task_t *task);
+int task_exit_handler(task_t *task, int status);
 int task_close(task_t *task);
 
 #endif

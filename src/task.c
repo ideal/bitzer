@@ -21,6 +21,8 @@
 
 #include "bitzer.h"
 
+static int task_reset(task_t *task);
+
 task_t *task_create(context_t *ctx)
 {
     task_t *task;
@@ -52,8 +54,55 @@ int task_init(task_t *task, context_t *ctx)
     return OK;
 }
 
+static int task_reset(task_t *task)
+{
+    task->pid    = 0;
+    task->status = TASK_FINISHED;
+    return OK;
+}
+
 int task_run(task_t *task)
 {
+    int ret;
+    pid_t pid;
+
+    task_reset(task);
+
+    pid = fork();
+    switch(pid) {
+    case 0:
+        ret = execv(task->file, task->args);
+        if (ret < 0) {
+            bz_log_error(task->ctx->log,
+                         "call execv failed, task: %s, error: %s",
+                         task->name, strerror(errno));
+            _exit(ERROR);
+        }
+        break;
+    case -1:
+        bz_log_error(task->ctx->log,
+                     "fork process failed, task: %s, error: %s",
+                     task->name, strerror(errno));
+        return ERROR;
+    }
+
+    task->pid    = pid;
+    task->status = TASK_RUNNING;
+    return OK;
+}
+
+int task_exit_handler(task_t *task, int status)
+{
+    if (WIFEXITED(status)) {
+        bz_log(task->ctx->log, BZ_LOG_INFO,
+               "task(%s) finished, return value: %d",
+               task->name, WEXITSTATUS(status));
+        return OK;
+    }
+
+    bz_log(task->ctx->log, BZ_LOG_INFO,
+           "task(%s) finished, by signal: %d",
+           task->name, WTERMSIG(status));
     return OK;
 }
 
