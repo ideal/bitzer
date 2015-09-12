@@ -81,7 +81,7 @@ static int task_redirect_io(task_t *task)
         strcat(task->log_file, ".log");
     }
 
-    fd = open(task->log_file, O_RDWR | O_APPEND);
+    fd = open(task->log_file, O_RDWR | O_APPEND | O_CREAT, 0644);
     if (fd < 0) {
         bz_log_error(task->ctx->log, "open(\"%s\") failed: %s",
                      task->log_file, strerror(errno));
