@@ -35,6 +35,7 @@ typedef struct task_s {
     time_t start_time;
     size_t start_count;
     context_t *ctx;
+    char *log_file;
     const char *file;
     const char *name;
     char * const *args;

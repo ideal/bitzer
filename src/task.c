@@ -22,6 +22,7 @@
 #include "bitzer.h"
 
 static int task_reset(task_t *task);
+static int task_redirect_io(task_t *task);
 
 task_t *task_create(context_t *ctx)
 {
@@ -48,6 +49,7 @@ int task_init(task_t *task, context_t *ctx)
     task->name = NULL;
     task->args = NULL;
     task->status = TASK_INIT;
+    task->log_file = NULL;
 
     // NOTE: we have not init list and node
 
@@ -61,6 +63,56 @@ static int task_reset(task_t *task)
     return OK;
 }
 
+static int task_redirect_io(task_t *task)
+{
+    int fd;
+    char *ptr;
+
+    if (!task->log_file) {
+        task->log_file = (char *)malloc(strlen(task->ctx->instance->prefix) +
+                                       strlen(task->name) + 6);
+        if (!task->log_file) {
+            return ERROR;
+        }
+
+        strcpy(task->log_file, task->ctx->instance->prefix);
+        strcat(task->log_file, "/");
+        strcat(task->log_file, task->name);
+        strcat(task->log_file, ".log");
+    }
+
+    fd = open(task->log_file, O_RDWR | O_APPEND);
+    if (fd < 0) {
+        bz_log_error(task->ctx->log, "open(\"%s\") failed: %s",
+                     task->log_file, strerror(errno));
+        return ERROR;
+    }
+
+    if (dup2(fd, STDIN_FILENO) < 0) {
+        ptr = "STDIN";
+        goto DUP2FAILED;
+    }
+
+    if (dup2(fd, STDOUT_FILENO) < 0) {
+        ptr = "STDOUT";
+        goto DUP2FAILED;
+    }
+
+    if (dup2(fd, STDERR_FILENO) < 0) {
+        ptr = "STDERR";
+        goto DUP2FAILED;
+    }
+
+    close(fd);
+    return OK;
+
+DUP2FAILED:
+    bz_log_error(task->ctx->log, "redirect task io, dup2(%d, \"%s\") failed: %s",
+                 fd, ptr, strerror(errno));
+    close(fd);
+    return ERROR;
+}
+
 int task_run(task_t *task)
 {
     int ret;
@@ -71,6 +123,7 @@ int task_run(task_t *task)
     pid = fork();
     switch(pid) {
     case 0:
+        task_redirect_io(task);
         ret = execv(task->file, task->args);
         if (ret < 0) {
             bz_log_error(task->ctx->log,
@@ -108,5 +161,6 @@ int task_exit_handler(task_t *task, int status)
 
 int task_close(task_t *task)
 {
+    free(task->log_file);
     return OK;
 }
