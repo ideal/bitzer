@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 %}
 
-%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV QUOTE WORD SEMICOLON NAME PATH ENV ARGSNAME ARGSVALUE
+%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV QUOTE STRING SEMICOLON NAME PATH ENV ARGSNAME ARGSVALUE
 
 %%
 
@@ -47,7 +47,7 @@ name:
 realname:
     NAME
     |
-    WORD
+    STRING
     {
         printf("name\n");
     }
@@ -62,9 +62,7 @@ args:
     ;
 
 argslist:
-    NUMBER
-    |
-    WORD
+    STRING
     |
     ARGSNAME
     |
