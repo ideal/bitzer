@@ -15,12 +15,12 @@ path       return TOKENPATH;
 args       return TOKENARGS;
 env        return TOKENENV;
 \".*\"     return STRING;
-;          return SEMICOLON;
-[a-zA-Z][a-zA-Z0-9-]* return NAME;
+\;         return SEMICOLON;
+[a-zA-Z][a-zA-Z0-9-]* return WORD;
+{number}+  return NUMBER;
 \/[a-zA-Z0-9]+(\/[a-zA-Z0-9]+)* return PATH;
-[a-zA-Z][a-zA-Z0-9]*=.+       return ENV;
+[a-zA-Z][a-zA-Z0-9]*=[^;\n]+       return ENV;
 -[^ \t\n0-9]+                 return ARGSNAME;
-[^ \t\n]+                     return ARGSVALUE;
 \n         ;
 [ \t]+     ;
 

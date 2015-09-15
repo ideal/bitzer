@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 %}
 
-%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV QUOTE STRING SEMICOLON NAME PATH ENV ARGSNAME ARGSVALUE
+%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV QUOTE STRING SEMICOLON PATH ENV ARGSNAME WORD NUMBER
 
 %%
 
@@ -27,7 +27,7 @@ tasks:
      ;
 
 task:
-    TOKENTASK  OPENBRACE taskdescs ENDBRACE
+    TOKENTASK OPENBRACE taskdescs ENDBRACE
     ;
 
 taskdescs:
@@ -43,19 +43,17 @@ taskdesc:
     |
     env
     {
-        printf("taskdesc\n");
     }
     ;
 
 name:
     TOKENNAME realname SEMICOLON
     {
-        printf("%s\n", $2);
     }
     ;
 
 realname:
-    NAME
+    WORD
     |
     STRING
     ;
@@ -76,7 +74,9 @@ arg:
     |
     ARGSNAME
     |
-    ARGSVALUE
+    WORD
+    |
+    NUMBER
     ;
 
 env:
