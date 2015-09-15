@@ -27,7 +27,11 @@ tasks:
      ;
 
 task:
-    TOKENTASK  OPENBRACE taskdesc ENDBRACE
+    TOKENTASK  OPENBRACE taskdescs ENDBRACE
+    ;
+
+taskdescs:
+    | taskdescs taskdesc
     ;
 
 taskdesc:
@@ -38,19 +42,22 @@ taskdesc:
     args
     |
     env
+    {
+        printf("taskdesc\n");
+    }
     ;
 
 name:
     TOKENNAME realname SEMICOLON
+    {
+        printf("%s\n", $2);
+    }
     ;
 
 realname:
     NAME
     |
     STRING
-    {
-        printf("name\n");
-    }
     ;
 
 path:
@@ -62,6 +69,9 @@ args:
     ;
 
 argslist:
+    | argslist arg
+
+arg:
     STRING
     |
     ARGSNAME
