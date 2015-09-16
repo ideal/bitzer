@@ -30,7 +30,7 @@ conf_t *conf_create()
         // an empty tasks list
         INIT_LIST_HEAD(&cnf->tasks_list);
     }
-    
+
     return cnf;
 }
 
