@@ -1,7 +1,8 @@
 %{
 #include <string.h>
-#include <stdio.h>
-#include "y.tab.h"
+
+#include "conf_gram.h"
+
 %}
 
 number [0-9]
