@@ -19,7 +19,7 @@ env        return TOKENENV;
 {number}+  return NUMBER;
 [0-9]+[a-zA-Z]*         return ALNUMWORD;
 [a-zA-Z][a-zA-Z0-9-]*   return ALPHAWORD;
-\/[a-zA-Z0-9]+(\/[a-zA-Z0-9]+)* return PATH;
+\/[a-zA-Z0-9]+(\/[-_+a-zA-Z0-9]+)* return PATH;
 -(-)?[^ \t\n;0-9-]+             return ARGKEY;
 [a-zA-Z][a-zA-Z0-9]*=[^;\n]+    return ENVAR;
 \n         ;
