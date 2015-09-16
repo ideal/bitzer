@@ -51,8 +51,7 @@ context_t *context_create(struct bitzer_s *bz)
     ctx->signal_task.callback = NULL;
     ctx->signal_task.arg      = NULL;
 
-    // an empty tasks list
-    INIT_LIST_HEAD(&ctx->tasks_list);
+    ctx->conf = NULL;
 
     // an empty tasks rbtree
     rbtree_init(&ctx->tasks_rbtree, &ctx->sentinel);

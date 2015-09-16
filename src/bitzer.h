@@ -66,6 +66,7 @@ typedef struct context_s context_t;
 #include "rbtree.h"
 #include "task.h"
 #include "alloc.h"
+#include "conf.h"
 
 #include "context.h"
 

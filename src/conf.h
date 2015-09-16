@@ -19,39 +19,17 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef BZ_CONTEXT_H
-#define BZ_CONTEXT_H
+#ifndef BZ_CONF_H
+#define BZ_CONF_H
 
 #include "bitzer.h"
 
-typedef void (*signal_callback_t)(void *arg);
+typedef struct conf_s {
+    struct list_head tasks_list;
+} conf_t;
 
-typedef struct signal_task_s {
-    signal_callback_t callback;
-    void *arg;
-} signal_task_t;
-
-struct context_s {
-    conf_t *conf;
-    struct bitzer_s *instance;
-    bz_log_t *log;
-    signal_task_t signal_task;
-    rbtree_t  tasks_rbtree;
-    rbtree_node_t sentinel;
-};
-
-extern context_t *context;
-
-extern sig_atomic_t bz_quit;
-extern sig_atomic_t bz_terminate;
-extern sig_atomic_t bz_reconfigure;
-extern sig_atomic_t bz_reopen;
-extern sig_atomic_t bz_child;
-
-context_t *context_create(struct bitzer_s *bz);
-int context_init(context_t *ctx);
-void context_run(context_t *ctx);
-void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg);
-void context_close(context_t *ctx);
+conf_t *conf_create();
+int conf_load(const char *path);
+int conf_close(conf_t *cnf);
 
 #endif

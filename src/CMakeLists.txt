@@ -7,6 +7,7 @@ set(bitzer_SRCS
     rbtree.c
     task.c
     alloc.c
+    conf.c
 )
 
 add_custom_command(
