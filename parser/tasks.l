@@ -16,11 +16,12 @@ args       return TOKENARGS;
 env        return TOKENENV;
 \".*\"     return STRING;
 \;         return SEMICOLON;
-[a-zA-Z][a-zA-Z0-9-]* return WORD;
 {number}+  return NUMBER;
+[0-9]+[a-zA-Z]*         return ALNUMWORD;
+[a-zA-Z][a-zA-Z0-9-]*   return ALPHAWORD;
 \/[a-zA-Z0-9]+(\/[a-zA-Z0-9]+)* return PATH;
-[a-zA-Z][a-zA-Z0-9]*=[^;\n]+       return ENV;
--[^ \t\n0-9]+                 return ARGSNAME;
+-(-)?[^ \t\n;0-9-]+             return ARGKEY;
+[a-zA-Z][a-zA-Z0-9]*=[^;\n]+    return ENVAR;
 \n         ;
 [ \t]+     ;
 

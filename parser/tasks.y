@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
 %}
 
-%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV QUOTE STRING SEMICOLON PATH ENV ARGSNAME WORD NUMBER
+%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV STRING NUMBER ALNUMWORD ALPHAWORD PATH ARGKEY ENVAR SEMICOLON
 
 %%
 
@@ -27,14 +27,14 @@ tasks:
      ;
 
 task:
-    TOKENTASK OPENBRACE taskdescs ENDBRACE
+    TOKENTASK OPENBRACE taskopts ENDBRACE
     ;
 
-taskdescs:
-    | taskdescs taskdesc
+taskopts:
+    | taskopts taskopt
     ;
 
-taskdesc:
+taskopt:
     name
     |
     path
@@ -47,15 +47,15 @@ taskdesc:
     ;
 
 name:
-    TOKENNAME realname SEMICOLON
+    TOKENNAME taskname SEMICOLON
     {
     }
     ;
 
-realname:
-    WORD
-    |
+taskname:
     STRING
+    |
+    ALPHAWORD
     ;
 
 path:
@@ -72,15 +72,17 @@ argslist:
 arg:
     STRING
     |
-    ARGSNAME
+    ARGKEY
     |
-    WORD
+    ALPHAWORD
+    |
+    ALNUMWORD
     |
     NUMBER
     ;
 
 env:
-   TOKENENV ENV SEMICOLON
+   TOKENENV ENVAR SEMICOLON
    ;
 
 %%
