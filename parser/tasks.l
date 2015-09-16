@@ -1,4 +1,5 @@
 %{
+#include <string.h>
 #include <stdio.h>
 #include "y.tab.h"
 %}
@@ -14,14 +15,14 @@ name       return TOKENNAME;
 path       return TOKENPATH;
 args       return TOKENARGS;
 env        return TOKENENV;
-\".*\"     return STRING;
+\"         return QUOTE;
 \;         return SEMICOLON;
-{number}+  return NUMBER;
-[0-9]+[a-zA-Z]*         return ALNUMWORD;
-[a-zA-Z][a-zA-Z0-9-]*   return ALPHAWORD;
-\/[a-zA-Z0-9]+(\/[-_+a-zA-Z0-9]+)* return PATH;
--(-)?[^ \t\n;0-9-]+             return ARGKEY;
-[a-zA-Z][a-zA-Z0-9]*=[^;\n]+    return ENVAR;
+{number}+  yylval.string=strdup(yytext); return NUMBER;
+[0-9]+[a-zA-Z]*         yylval.string=strdup(yytext); return ALNUMWORD;
+[a-zA-Z][a-zA-Z0-9-]*   yylval.string=strdup(yytext); return ALPHAWORD;
+\/[a-zA-Z0-9]+(\/[-_+a-zA-Z0-9]+)* yylval.string=strdup(yytext); return PATH;
+-(-)?[^ \t\n;0-9-]+             yylval.string=strdup(yytext); return ARGKEY;
+[a-zA-Z][a-zA-Z0-9]*=[^;\n]+    yylval.string=strdup(yytext); return ENVAR;
 \n         ;
 [ \t]+     ;
 
