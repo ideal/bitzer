@@ -23,7 +23,7 @@ add_custom_command(
     ARGS -d -o ${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c
             ${CMAKE_CURRENT_SOURCE_DIR}/conf_gram.y
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/conf_scan.c
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c
+    OUTPUT  ${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c
     )
 
 set(bitzer_SRCS ${bitzer_SRCS}
@@ -31,8 +31,8 @@ set(bitzer_SRCS ${bitzer_SRCS}
     ${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c
    )
 
-set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/conf_scan.c PROPERTIES GENERATED TRUE)
-set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c PROPERTIES GENERATED TRUE)
+set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/conf_scan.c GENERATED)
+set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/conf_gram.c GENERATED)
 
 add_executable(bitzer ${bitzer_SRCS})
 
