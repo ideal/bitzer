@@ -11,6 +11,8 @@ set(CMAKE_COLOR_MAKEFILE   ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
@@ -32,6 +34,9 @@ if (PID_PATH)
     set(BZ_PID_PATH TRUE)
 endif (PID_PATH)
 
+find_package(Flex REQUIRED)
+find_package(Bison REQUIRED)
+
 # check header files
 include(CheckIncludeFiles)
 
@@ -45,9 +50,8 @@ check_function_exists(getopt_long HAVE_GETOPT_LONG)
 check_function_exists(getifaddrs HAVE_GETIFADDRS)
 check_function_exists(pselect HAVE_PSELECT)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}
-                    ${CMAKE_CURRENT_BINARY_DIR}/src
-                    ${CMAKE_CURRENT_SOURCE_DIR}/src
+include_directories(${PROJECT_BINARY_DIR}
+                    ${PROJECT_SOURCE_DIR}/src
                    )
 
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -56,7 +60,7 @@ if (CMAKE_COMPILER_IS_GNUCC)
     add_definitions(-D_GNU_SOURCE)
 endif (CMAKE_COMPILER_IS_GNUCC)
 
-configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(config.h.cmake ${PROJECT_BINARY_DIR}/config.h)
 
 add_subdirectory(src)
 
