@@ -60,7 +60,7 @@ context_t *context_create(struct bitzer_s *bz)
 
 int context_init(context_t *ctx)
 {
-    ctx->conf = conf_create();
+    ctx->conf = conf_create(ctx);
     if (!ctx->conf) {
         return ERROR;
     }

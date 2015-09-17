@@ -26,11 +26,11 @@
 int yyparse(conf_t *cnf, yyscan_t scanner);
 static char *conf_mmap(const char *path, size_t *len);
 
-conf_t *conf_create()
+conf_t *conf_create(context_t *ctx)
 {
     conf_t *cnf;
 
-    cnf = (conf_t *)bz_alloc(sizeof(conf_t), context->log);
+    cnf = (conf_t *)bz_alloc(sizeof(conf_t), ctx->log);
     if (cnf) {
         // an empty tasks list
         INIT_LIST_HEAD(&cnf->tasks_list);

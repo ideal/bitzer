@@ -28,7 +28,7 @@ typedef struct conf_s {
     struct list_head tasks_list;
 } conf_t;
 
-conf_t *conf_create();
+conf_t *conf_create(context_t *ctx);
 int conf_load(conf_t *cnf, const char *path);
 int conf_close(conf_t *cnf);
 
