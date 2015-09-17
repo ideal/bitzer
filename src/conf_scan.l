@@ -5,6 +5,8 @@
 
 %}
 
+%option bison-bridge
+
 number [0-9]
 
 %%

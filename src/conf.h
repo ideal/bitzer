@@ -29,7 +29,7 @@ typedef struct conf_s {
 } conf_t;
 
 conf_t *conf_create();
-int conf_load(const char *path);
+int conf_load(conf_t *cnf, const char *path);
 int conf_close(conf_t *cnf);
 
 #endif

@@ -20,6 +20,10 @@
  */
 
 #include "bitzer.h"
+#include "conf_gram.h"
+
+int yyparse(conf_t *cnf, yyscan_t scanner);
+static char *conf_mmap(const char *path, size_t *len);
 
 conf_t *conf_create()
 {
@@ -34,12 +38,62 @@ conf_t *conf_create()
     return cnf;
 }
 
-int conf_load(const char *path)
+int conf_load(conf_t *cnf, const char *path)
 {
+    size_t len;
+    yyscan_t scanner;
+    YY_BUFFER_STATE state;
+    const char *confstr;
+
+    if (yylex_init(&scanner) != 0) {
+        return ERROR;
+    }
+
+    if (!(confstr = conf_mmap(path, &len))) {
+        return ERROR;
+    }
+
+    state = yy_scan_bytes(confstr, len, scanner);
+    if (yyparse(cnf, scanner) != 0) {
+        munmap((void *)confstr, len);
+        return ERROR;
+    }
+
+    munmap((void *)confstr, len);
+    yy_delete_buffer(state, scanner);
+    yylex_destroy(scanner);
+
     return OK;
 }
 
 int conf_close(conf_t *cnf)
 {
     return OK;
+}
+
+static char *conf_mmap(const char *path, size_t *len)
+{
+    int fd;
+    char *ptr;
+    struct stat st;
+
+    ptr = NULL;
+    fd  = open(path, O_RDONLY);
+    if (fd < 0) {
+        return NULL;
+    }
+    if (fstat(fd, &st) < 0) {
+        goto EXIT;
+    }
+
+    *len = st.st_size;
+    ptr  = (char *)mmap(NULL, *len, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (ptr == MAP_FAILED) {
+        ptr = NULL;
+        goto EXIT;
+    }
+
+EXIT:
+    close(fd);
+    return ptr;
 }

@@ -34,6 +34,7 @@
 
 #include <sys/wait.h>
 
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 

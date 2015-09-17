@@ -1,6 +1,8 @@
 %{
-#include <stdio.h>
-#include "task.h"
+#include "bitzer.h"
+#include "conf_gram.h"
+
+typedef void* yyscan_t;
 
 void yyerror(const char *str)
 {
@@ -12,12 +14,11 @@ int yywrap()
     return 1;
 }
 
-int main(int argc, char *argv[])
-{
-    yyparse();
-}
-
 %}
+
+%lex-param { yyscan_t scanner }
+%parse-param { conf_t *conf }
+%parse-param {  yyscan_t scanner }
 
 %token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV SEMICOLON QUOTE
 
