@@ -86,6 +86,7 @@ static char *conf_mmap(const char *path, size_t *len)
     ptr = NULL;
     fd  = open(path, O_RDONLY);
     if (fd < 0) {
+        bz_log_stderr("open conf file '%s' failed: %s", path, strerror(errno));
         return NULL;
     }
     if (fstat(fd, &st) < 0) {
