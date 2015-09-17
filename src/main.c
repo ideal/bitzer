@@ -440,6 +440,7 @@ static void bz_run(struct bitzer_s *bz)
     }
 
     if (context_init(ctx) != BZ_OK) {
+        context_close(ctx);
         return;
     }
 

@@ -30,7 +30,7 @@ conf_t *conf_create()
 {
     conf_t *cnf;
 
-    cnf = (conf_t *)malloc(sizeof(conf_t));
+    cnf = (conf_t *)bz_alloc(sizeof(conf_t), context->log);
     if (cnf) {
         // an empty tasks list
         INIT_LIST_HEAD(&cnf->tasks_list);
@@ -69,6 +69,11 @@ int conf_load(conf_t *cnf, const char *path)
 
 int conf_close(conf_t *cnf)
 {
+    // TODO: free tasks
+
+    if (cnf) {
+        free(cnf);
+    }
     return OK;
 }
 

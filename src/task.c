@@ -69,8 +69,8 @@ static int task_redirect_io(task_t *task)
     char *ptr;
 
     if (!task->log_path) {
-        task->log_path = (char *)malloc(strlen(task->ctx->instance->prefix) +
-                                       strlen(task->name) + 6);
+        task->log_path = (char *)bz_alloc(strlen(task->ctx->instance->prefix) +
+                                          strlen(task->name) + 6, task->ctx->log);
         if (!task->log_path) {
             return ERROR;
         }

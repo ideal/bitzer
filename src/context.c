@@ -60,7 +60,12 @@ context_t *context_create(struct bitzer_s *bz)
 
 int context_init(context_t *ctx)
 {
-    return OK;
+    ctx->conf = conf_create();
+    if (!ctx->conf) {
+        return ERROR;
+    }
+
+    return conf_load(ctx->conf, ctx->instance->conf_file);
 }
 
 void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg)
@@ -94,8 +99,9 @@ void context_run(context_t *ctx)
 
 void context_close(context_t *ctx)
 {
-    // finish tasks
+    // TODO: finish tasks
 
+    conf_close(ctx->conf);
     free(ctx);
 }
 
