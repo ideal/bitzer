@@ -1,10 +1,11 @@
 %{
-#include <string.h>
-
+#include "bitzer.h"
 #include "conf_gram.h"
 
 %}
 
+%option reentrant
+%option noyywrap
 %option bison-bridge
 
 number [0-9]
@@ -20,13 +21,14 @@ args       return TOKENARGS;
 env        return TOKENENV;
 \"         return QUOTE;
 \;         return SEMICOLON;
-{number}+  yylval.string=strdup(yytext); return NUMBER;
-[0-9]+[a-zA-Z]*         yylval.string=strdup(yytext); return ALNUMWORD;
-[a-zA-Z][a-zA-Z0-9-]*   yylval.string=strdup(yytext); return ALPHAWORD;
-\/[a-zA-Z0-9]+(\/[-_+a-zA-Z0-9]+)* yylval.string=strdup(yytext); return PATH;
--(-)?[^ \t\n;0-9-]+             yylval.string=strdup(yytext); return ARGKEY;
-[a-zA-Z][a-zA-Z0-9]*=[^;\n]+    yylval.string=strdup(yytext); return ENVAR;
+{number}+  yylval->string=strdup(yytext); return NUMBER;
+[0-9]+[a-zA-Z]*         yylval->string=strdup(yytext); return ALNUMWORD;
+[a-zA-Z][a-zA-Z0-9-]*   yylval->string=strdup(yytext); return ALPHAWORD;
+\/[a-zA-Z0-9]+(\/[-_+a-zA-Z0-9]+)* yylval->string=strdup(yytext); return PATH;
+-(-)?[^ \t\n;0-9-]+             yylval->string=strdup(yytext); return ARGKEY;
+[a-zA-Z][a-zA-Z0-9]*=[^;\n]+    yylval->string=strdup(yytext); return ENVAR;
 \n         ;
 [ \t]+     ;
 
 %%
+

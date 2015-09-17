@@ -14,6 +14,7 @@ add_custom_command(
     SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/conf_scan.l
     COMMAND ${FLEX_EXECUTABLE}
     ARGS -o${CMAKE_CURRENT_BINARY_DIR}/conf_scan.c
+        --header-file=${CMAKE_CURRENT_BINARY_DIR}/conf_scan.h
            ${CMAKE_CURRENT_SOURCE_DIR}/conf_scan.l
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/conf_scan.c
     )

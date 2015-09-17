@@ -21,6 +21,7 @@
 
 #include "bitzer.h"
 #include "conf_gram.h"
+#include "conf_scan.h"
 
 int yyparse(conf_t *cnf, yyscan_t scanner);
 static char *conf_mmap(const char *path, size_t *len);

@@ -1,21 +1,25 @@
 %{
 #include "bitzer.h"
 #include "conf_gram.h"
+#include "conf_scan.h"
 
-typedef void* yyscan_t;
-
-void yyerror(const char *str)
+void yyerror(conf_t *cnf, yyscan_t scanner, const char *str)
 {
     fprintf(stderr, "error : %s", str);
 }
 
-int yywrap()
-{
-    return 1;
-}
-
 %}
 
+%code requires {
+
+#ifndef YY_TYPEDEF_YY_SCANNER_T
+#define YY_TYPEDEF_YY_SCANNER_T
+typedef void* yyscan_t;
+#endif
+
+}
+
+%define api.pure
 %lex-param { yyscan_t scanner }
 %parse-param { conf_t *conf }
 %parse-param {  yyscan_t scanner }
