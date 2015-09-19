@@ -3,9 +3,11 @@
 #include "conf_gram.h"
 #include "conf_scan.h"
 
-void yyerror(conf_t *cnf, yyscan_t scanner, const char *str)
+static task_t *task;
+
+void yyerror(YYLTYPE *locp, conf_t *cnf, yyscan_t scanner, const char *str)
 {
-    fprintf(stderr, "error : %s", str);
+    bz_log_stderr("error in you config file: %s near line: %d", str, locp->first_line);
 }
 
 %}
@@ -19,6 +21,7 @@ typedef void* yyscan_t;
 
 }
 
+%locations
 %define api.pure
 %lex-param { yyscan_t scanner }
 %parse-param { conf_t *conf }
@@ -52,6 +55,12 @@ tasks:
 
 task:
     TOKENTASK OPENBRACE taskopts ENDBRACE
+    {
+        task = task_create(conf->ctx);
+        if (task) {
+            task_init(task, conf->ctx);
+        }
+    }
     ;
 
 taskopts:

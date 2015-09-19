@@ -7,6 +7,7 @@
 %option reentrant
 %option noyywrap
 %option bison-bridge
+%option bison-locations
 
 number [0-9]
 

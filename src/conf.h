@@ -25,6 +25,7 @@
 #include "bitzer.h"
 
 typedef struct conf_s {
+    context_t *ctx;
     struct list_head tasks_list;
 } conf_t;
 

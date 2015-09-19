@@ -32,6 +32,7 @@ conf_t *conf_create(context_t *ctx)
 
     cnf = (conf_t *)bz_alloc(sizeof(conf_t), ctx->log);
     if (cnf) {
+        cnf->ctx = ctx;
         // an empty tasks list
         INIT_LIST_HEAD(&cnf->tasks_list);
     }
