@@ -41,6 +41,7 @@ conf_t *conf_create(context_t *ctx)
 
 int conf_load(conf_t *cnf, const char *path)
 {
+    int ret;
     size_t len;
     yyscan_t scanner;
     YY_BUFFER_STATE state;
@@ -55,16 +56,13 @@ int conf_load(conf_t *cnf, const char *path)
     }
 
     state = yy_scan_bytes(confstr, len, scanner);
-    if (yyparse(cnf, scanner) != 0) {
-        munmap((void *)confstr, len);
-        return ERROR;
-    }
+    ret   = yyparse(cnf, scanner) == 0 ? OK : ERROR;
 
     munmap((void *)confstr, len);
     yy_delete_buffer(state, scanner);
     yylex_destroy(scanner);
 
-    return OK;
+    return ret;
 }
 
 int conf_close(conf_t *cnf)
