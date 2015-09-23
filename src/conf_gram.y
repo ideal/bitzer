@@ -5,6 +5,16 @@
 
 static task_t *task;
 
+#define check_task()                    \
+do {                                    \
+    if (!task) {                        \
+        task = task_create(conf->ctx);  \
+        if (task) {                     \
+            task_init(task, conf->ctx); \
+        }                               \
+    }                                   \
+} while(0)
+
 void yyerror(YYLTYPE *locp, conf_t *cnf, yyscan_t scanner, const char *str)
 {
     bz_log_stderr("error in you config file: %s near line: %d", str, locp->first_line);
@@ -56,10 +66,8 @@ tasks:
 task:
     TOKENTASK OPENBRACE taskopts ENDBRACE
     {
-        task = task_create(conf->ctx);
-        if (task) {
-            task_init(task, conf->ctx);
-        }
+        list_add(&task->list, &conf->tasks_list);
+        task = NULL;
     }
     ;
 
@@ -82,7 +90,8 @@ taskopt:
 name:
     TOKENNAME taskname SEMICOLON
     {
-        printf("taskname: %s\n", $2);
+        check_task();
+        task->name = $2;
     }
     ;
 
@@ -100,7 +109,8 @@ taskname:
 path:
     TOKENPATH PATH SEMICOLON
     {
-        printf("path: %s\n", $2);
+        check_task();
+        task->path = $2;
     }
     ;
 
