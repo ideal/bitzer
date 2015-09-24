@@ -32,7 +32,7 @@ enum task_status_e {
 
 typedef struct task_s {
     pid_t  pid;
-    time_t start_time;
+    struct timeval start_time;
     size_t start_count;
     context_t *ctx;
     char *log_path;

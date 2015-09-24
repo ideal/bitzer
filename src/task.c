@@ -42,7 +42,8 @@ task_t *task_create(context_t *ctx)
 int task_init(task_t *task, context_t *ctx)
 {
     task->pid = 0;
-    task->start_time  = 0;
+    task->start_time.tv_sec  = 0;
+    task->start_time.tv_usec = 0;
     task->start_count = 0 ;
     task->ctx  = ctx;
     task->path = NULL;
@@ -141,6 +142,8 @@ int task_run(task_t *task)
 
     task->pid    = pid;
     task->status = TASK_RUNNING;
+    task->start_count++;
+    gettimeofday(&task->start_time, NULL);
     return OK;
 }
 
