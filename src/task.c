@@ -173,15 +173,13 @@ int task_close(task_t *task)
 
     ptr = task->args;
     while (*ptr) {
-        free(*ptr);
-        ptr ++;
+        free(*ptr++);
     }
     free(task->args);
 
     ptr = task->envp;
     while (*ptr) {
-        free(*ptr);
-        ptr ++;
+        free(*ptr++);
     }
     // ok if envp is NULL
     free(task->envp);
