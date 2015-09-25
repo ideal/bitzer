@@ -32,6 +32,7 @@ sig_atomic_t  bz_child;
 static int context_sigmask(sigset_t *mask, sigset_t *origmask);
 static int context_event_handler(context_t *ctx);
 static task_t *context_find_task(context_t *ctx, pid_t pid);
+static int context_start_tasks(context_t *ctx);
 static int context_restart_task(context_t *ctx, task_t *task);
 
 context_t *context_create(struct bitzer_s *bz)
@@ -83,6 +84,8 @@ void context_run(context_t *ctx)
         bz_log_error(ctx->log, "set signal mask failed: %s", strerror(errno));
         return;
     }
+
+    context_start_tasks(ctx);
 
     while (1) {
         ret = pselect(0, NULL, NULL, NULL, NULL, &origmask);
@@ -176,6 +179,28 @@ static task_t *context_find_task(context_t *ctx, pid_t pid)
 
     /* not found */
     return NULL;
+}
+
+static int context_start_tasks(context_t *ctx)
+{
+    task_t *task;
+    struct list_head *pos;
+
+    if (list_empty(&ctx->conf->tasks_list)) {
+        return OK;
+    }
+
+    list_for_each(pos, &ctx->conf->tasks_list) {
+        task = list_entry(pos, task_t, list);
+        if (task_run(task) == OK) {
+            // add to rbtree
+            rbtree_insert(&ctx->tasks_rbtree, &task->node);
+            bz_log(ctx->log, BZ_LOG_INFO, "starting task succeed, name: %s", task->name);
+        } else {
+            bz_log_error(ctx->log, "starting task failed, name: %s", task->name);
+        }
+    }
+    return OK;
 }
 
 static int context_restart_task(context_t *ctx, task_t *task)
