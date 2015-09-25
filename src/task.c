@@ -169,6 +169,23 @@ int task_exit_handler(task_t *task, int status)
 
 int task_close(task_t *task)
 {
+    char **ptr;
+
+    ptr = task->args;
+    while (*ptr) {
+        free(*ptr);
+        ptr ++;
+    }
+    free(task->args);
+
+    ptr = task->envp;
+    while (*ptr) {
+        free(*ptr);
+        ptr ++;
+    }
+    // ok if envp is NULL
+    free(task->envp);
+
     free(task->log_path);
     return OK;
 }
