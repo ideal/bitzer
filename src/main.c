@@ -27,11 +27,11 @@
 #define BZ_LOG_DEFAULT   BZ_LOG_INFO
 
 #ifndef BZ_LOG_PATH
-# define BZ_LOG_PATH     "logs/bitzer.log"
+# define BZ_LOG_PATH     "log/bitzer.log"
 #endif
 
 #ifndef BZ_PID_PATH
-# define BZ_PID_PATH     "logs/bitzer.pid"
+# define BZ_PID_PATH     "log/bitzer.pid"
 #endif
 
 #ifndef BZ_CONF_PATH

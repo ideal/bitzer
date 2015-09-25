@@ -76,13 +76,13 @@ static int task_redirect_io(task_t *task)
 
     if (!task->log_path) {
         task->log_path = (char *)bz_alloc(strlen(task->ctx->instance->prefix) +
-                                          strlen(task->name) + 11, task->ctx->log);
+                                          strlen(task->name) + 10, task->ctx->log);
         if (!task->log_path) {
             return ERROR;
         }
 
         strcpy(task->log_path, task->ctx->instance->prefix);
-        strcat(task->log_path, "/logs/");
+        strcat(task->log_path, "/log/");
         strcat(task->log_path, task->name);
         strcat(task->log_path, ".log");
     }
