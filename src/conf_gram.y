@@ -17,6 +17,17 @@ do {                                    \
     }                                   \
 } while(0)
 
+#define check_task_member(member, incrsize)                        \
+do {                                                               \
+    if (task->member ## _len >= task->member ## _total) {          \
+        /* TODO: check if realloc failed */                        \
+        task->member = (char **)realloc(task->member,              \
+                               (task->member ## _total + incrsize) \
+                               * sizeof(char *));                  \
+        task->member ## _total += incrsize;                        \
+    }                                                              \
+} while(0)
+
 void yyerror(YYLTYPE *locp, conf_t *cnf, yyscan_t scanner, const char *str)
 {
     bz_log_stderr("error in you config file: %s near line: %d", str, locp->first_line);
@@ -124,12 +135,7 @@ argslist:
     | argslist arg
     {
         check_task();
-        if (task->args_len >= task->args_total) {
-            // TODO: check if realloc failed
-            task->args = (char **)realloc(task->args,
-                                  (task->args_total + CONF_DEFAULT_LEN) * sizeof(char *));
-            task->args_total += CONF_DEFAULT_LEN;
-        }
+        check_task_member(args, CONF_DEFAULT_LEN);
         task->args[task->args_len++] = $2;
     }
     ;
@@ -167,12 +173,7 @@ env:
     TOKENENV ENVAR SEMICOLON
     {
         check_task();
-        if (task->envp_len >= task->envp_total) {
-            // TODO: check if realloc failed
-            task->envp = (char **)realloc(task->envp,
-                                  (task->envp_total + CONF_DEFAULT_LEN) * sizeof(char *));
-            task->envp_total += CONF_DEFAULT_LEN;
-        }
+        check_task_member(envp, CONF_DEFAULT_LEN);
         task->envp[task->envp_len++] = $2;
     }
     ;
