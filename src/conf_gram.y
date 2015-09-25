@@ -81,6 +81,7 @@ task:
     {
         size_t i;
 
+        // there must be args
         check_task_member(args, 2, 2);
         for (i = task->args_len; i > 0; i--) {
             task->args[i] = task->args[i - 1];
@@ -88,6 +89,12 @@ task:
         task->args[0] = (char *)task->path;
         task->args_len++;
         task->args[task->args_len++] = NULL;
+
+        // envp is optional
+        if (task->envp) {
+            check_task_member(envp, 1, 1);
+            task->envp[task->envp_len++] = NULL;
+        }
 
         list_add(&task->list, &conf->tasks_list);
         task = NULL;
