@@ -17,15 +17,15 @@ do {                                    \
     }                                   \
 } while(0)
 
-#define check_task_member(member, incrsize)                        \
-do {                                                               \
-    if (task->member ## _len >= task->member ## _total) {          \
-        /* TODO: check if realloc failed */                        \
-        task->member = (char **)realloc(task->member,              \
-                               (task->member ## _total + incrsize) \
-                               * sizeof(char *));                  \
-        task->member ## _total += incrsize;                        \
-    }                                                              \
+#define check_task_member(member, needsize, incrsize)               \
+do {                                                                \
+    if (task->member ## _len + needsize > task->member ## _total) { \
+        /* TODO: check if realloc failed */                         \
+        task->member = (char **)realloc(task->member,               \
+                               (task->member ## _total + incrsize)  \
+                               * sizeof(char *));                   \
+        task->member ## _total += incrsize;                         \
+    }                                                               \
 } while(0)
 
 void yyerror(YYLTYPE *locp, conf_t *cnf, yyscan_t scanner, const char *str)
@@ -79,6 +79,16 @@ tasks:
 task:
     TOKENTASK OPENBRACE taskopts ENDBRACE
     {
+        size_t i;
+
+        check_task_member(args, 2, 2);
+        for (i = task->args_len; i > 0; i--) {
+            task->args[i] = task->args[i - 1];
+        }
+        task->args[0] = (char *)task->path;
+        task->args_len++;
+        task->args[task->args_len++] = NULL;
+
         list_add(&task->list, &conf->tasks_list);
         task = NULL;
     }
@@ -135,7 +145,7 @@ argslist:
     | argslist arg
     {
         check_task();
-        check_task_member(args, CONF_DEFAULT_LEN);
+        check_task_member(args, 1, CONF_DEFAULT_LEN);
         task->args[task->args_len++] = $2;
     }
     ;
@@ -173,7 +183,7 @@ env:
     TOKENENV ENVAR SEMICOLON
     {
         check_task();
-        check_task_member(envp, CONF_DEFAULT_LEN);
+        check_task_member(envp, 1, CONF_DEFAULT_LEN);
         task->envp[task->envp_len++] = $2;
     }
     ;
