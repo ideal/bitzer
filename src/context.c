@@ -100,9 +100,16 @@ void context_run(context_t *ctx)
     }
 }
 
+// TODO: finish tasks
 void context_close(context_t *ctx)
 {
-    // TODO: finish tasks
+    struct list_head *pos;
+
+    if (ctx->conf) {
+        list_for_each(pos, &ctx->conf->tasks_list) {
+            task_close(list_entry(pos, task_t, list));
+        }
+    }
 
     conf_close(ctx->conf);
     free(ctx);

@@ -68,8 +68,6 @@ int conf_load(conf_t *cnf, const char *path)
 
 int conf_close(conf_t *cnf)
 {
-    // TODO: free tasks
-
     if (cnf) {
         free(cnf);
     }
