@@ -49,6 +49,11 @@ int task_init(task_t *task, context_t *ctx)
     task->path = NULL;
     task->name = NULL;
     task->args = NULL;
+    task->args_len   = 0;
+    task->args_total = 0;
+    task->envp = NULL;
+    task->envp_len   = 0;
+    task->envp_total = 0;
     task->status = TASK_INIT;
     task->log_path = NULL;
 

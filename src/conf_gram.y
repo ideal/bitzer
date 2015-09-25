@@ -3,6 +3,8 @@
 #include "conf_gram.h"
 #include "conf_scan.h"
 
+#define CONF_DEFAULT_LEN 10
+
 static task_t *task;
 
 #define check_task()                    \
@@ -121,7 +123,14 @@ args:
 argslist:
     | argslist arg
     {
-        printf("arg: %s\n", $2);
+        check_task();
+        if (task->args_len >= task->args_total) {
+            // TODO: check if realloc failed
+            task->args = (char **)realloc(task->args,
+                                  (task->args_total + CONF_DEFAULT_LEN) * sizeof(char *));
+            task->args_total += CONF_DEFAULT_LEN;
+        }
+        task->args[task->args_len++] = $2;
     }
     ;
 
@@ -157,7 +166,14 @@ innerarg:
 env:
     TOKENENV ENVAR SEMICOLON
     {
-        printf("env: %s\n", $2);
+        check_task();
+        if (task->envp_len >= task->envp_total) {
+            // TODO: check if realloc failed
+            task->envp = (char **)realloc(task->envp,
+                                  (task->envp_total + CONF_DEFAULT_LEN) * sizeof(char *));
+            task->envp_total += CONF_DEFAULT_LEN;
+        }
+        task->envp[task->envp_len++] = $2;
     }
     ;
 

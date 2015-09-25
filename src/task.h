@@ -38,7 +38,12 @@ typedef struct task_s {
     char *log_path;
     const char *path;
     const char *name;
-    char * const *args;
+    char **args;
+    size_t args_len;
+    size_t args_total;
+    char **envp;
+    size_t envp_len;
+    size_t envp_total;
     struct list_head list;
     rbtree_node_t node;
     unsigned int status:4;
