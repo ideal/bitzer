@@ -146,7 +146,8 @@ int task_run(task_t *task)
     }
 
     task->pid    = pid;
-    task->status = TASK_RUNNING;
+    task->node.key = (rbtree_key_t)pid;
+    task->status   = TASK_RUNNING;
     task->start_count++;
     gettimeofday(&task->start_time, NULL);
     return OK;
