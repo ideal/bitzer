@@ -194,7 +194,9 @@ int task_close(task_t *task)
     // ok if envp is NULL
     free(task->envp);
 
-    free((char *)task->path);
+    // NOTE: we can't free task->path here,
+    // because it is already been freed in args[0]
+
     free((char *)task->name);
     free((char *)task->dir);
     free(task->log_path);
