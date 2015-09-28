@@ -194,6 +194,9 @@ int task_close(task_t *task)
     // ok if envp is NULL
     free(task->envp);
 
+    free((char *)task->path);
+    free((char *)task->name);
+    free((char *)task->dir);
     free(task->log_path);
     return OK;
 }
