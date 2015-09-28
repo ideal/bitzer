@@ -50,7 +50,7 @@ typedef void* yyscan_t;
 %parse-param { conf_t *conf }
 %parse-param {  yyscan_t scanner }
 
-%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV SEMICOLON QUOTE
+%token OPENBRACE ENDBRACE TOKENTASK TOKENNAME TOKENPATH TOKENARGS TOKENENV TOKENDIR SEMICOLON QUOTE
 
 %union
 {
@@ -113,8 +113,8 @@ taskopt:
     args
     |
     env
-    {
-    }
+    |
+    dir
     ;
 
 name:
@@ -194,5 +194,12 @@ env:
         task->envp[task->envp_len++] = $2;
     }
     ;
+
+dir:
+    TOKENDIR PATH SEMICOLON
+    {
+        check_task();
+        task->dir = $2;
+    };
 
 %%

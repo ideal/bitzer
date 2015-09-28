@@ -38,6 +38,7 @@ typedef struct task_s {
     char *log_path;
     const char *path;
     const char *name;
+    const char *dir;
     char **args;
     size_t args_len;
     size_t args_total;

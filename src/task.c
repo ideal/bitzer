@@ -48,6 +48,7 @@ int task_init(task_t *task, context_t *ctx)
     task->ctx  = ctx;
     task->path = NULL;
     task->name = NULL;
+    task->dir  = NULL;
     task->args = NULL;
     task->args_len   = 0;
     task->args_total = 0;
@@ -130,6 +131,12 @@ int task_run(task_t *task)
     switch(pid) {
     case 0:
         task_redirect_io(task);
+        if (task->dir && chdir(task->dir) < 0) {
+            bz_log_error(task->ctx->log,
+                         "change working directory failed, task: %s, error: %s",
+                         task->name, strerror(errno));
+            _exit(ERROR);
+        }
         ret = execv(task->path, task->args);
         if (ret < 0) {
             bz_log_error(task->ctx->log,

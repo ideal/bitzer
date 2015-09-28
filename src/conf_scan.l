@@ -20,6 +20,7 @@ name       return TOKENNAME;
 path       return TOKENPATH;
 args       return TOKENARGS;
 env        return TOKENENV;
+dir        return TOKENDIR;
 \"         return QUOTE;
 \;         return SEMICOLON;
 {number}+  yylval->string=strdup(yytext); return NUMBER;
