@@ -46,5 +46,7 @@ Running
 
 Just run `bitzer` if its path is in PATH, or type in the absolute path of bitzer.
 
+The name
+=======
 
-
+[`Bitzer`](http://shaunthesheep.wikia.com/wiki/Bitzer) is a sheepdog in `Shaun the Sheep`.
