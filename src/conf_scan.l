@@ -31,6 +31,7 @@ dir        return TOKENDIR;
 [a-zA-Z][a-zA-Z0-9]*=[^;\n]+    yylval->string=strdup(yytext); return ENVAR;
 \n         ;
 [ \t]+     ;
+^#.*$      ;
 
 %%
 
