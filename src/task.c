@@ -127,6 +127,12 @@ int task_run(task_t *task)
 
     task_reset(task);
 
+    if (!task->name || !task->path) {
+        bz_log_error(task->ctx->log,
+                     "you must set task name and path");
+        return ERROR;
+    }
+
     pid = fork();
     switch(pid) {
     case 0:
