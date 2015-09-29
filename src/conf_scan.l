@@ -26,7 +26,7 @@ dir        return TOKENDIR;
 {number}+  yylval->string=strdup(yytext); return NUMBER;
 [0-9]+[_a-zA-Z-]*            yylval->string=strdup(yytext); return ALNUMWORD;
 [a-zA-Z][\.\/_a-zA-Z0-9-]*   yylval->string=strdup(yytext); return ALPHAWORD;
-\/[-\.+a-zA-Z0-9]+(\/[-\._+a-zA-Z0-9]+)* yylval->string=strdup(yytext); return PATH;
+\/[-\.+a-zA-Z0-9]*(\/[-\._+a-zA-Z0-9]*)* yylval->string=strdup(yytext); return PATH;
 -(-)?[^ \t\n;0-9-]+             yylval->string=strdup(yytext); return ARGKEY;
 [a-zA-Z][a-zA-Z0-9]*=[^;\n]+    yylval->string=strdup(yytext); return ENVAR;
 \n         ;
