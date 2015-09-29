@@ -23,7 +23,7 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/tmp
 make && make install
 ```
 
-In that prefix directory, you need to create two directory: `conf` and `log`. There must be a config file named `bitzer.conf` under `conf`, the format is described below.
+In that prefix directory, there is a `bitzer.conf` under `conf` directory, the format is described as below.
 
 Configuration
 =============
