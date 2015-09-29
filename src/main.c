@@ -38,6 +38,8 @@
 # define BZ_CONF_PATH    "conf/bitzer.conf"
 #endif
 
+#define BZ_PROCTITLE     "bitzer"
+
 static int show_help;
 static int show_version;
 static int test_conf;
@@ -330,6 +332,19 @@ static void bz_print_sysinfo(struct bitzer_s *bz)
            uts.release, uts.machine);
 }
 
+static void bz_setproctitle(char **argv, const char *title)
+{
+    size_t  i, len;
+
+    len = strlen(argv[0]);
+    for (i = 0; i < len && title[i] != '\0'; i++) {
+        argv[0][i] = title[i];
+    }
+    while (i < len) {
+        argv[0][i++] = ' ';
+    }
+}
+
 #define BZ_MEMBER_ALLOC(_member) _member ## _alloc
 
 #define BZ_STRCAT_IF_RELATIVE(_instance, _member, _path)   \
@@ -476,6 +491,8 @@ int main(int argc, char *argv[])
         bz_post_run(&bz);
         exit(1);
     }
+
+    bz_setproctitle(argv, BZ_PROCTITLE);
 
     bz_run(&bz);
 
