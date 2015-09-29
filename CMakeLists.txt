@@ -64,3 +64,10 @@ configure_file(config.h.cmake ${PROJECT_BINARY_DIR}/config.h)
 
 add_subdirectory(src)
 
+if (NOT DEFINED CONF_PATH)
+    install(FILES ${PROJECT_SOURCE_DIR}/conf/bitzer.conf DESTINATION conf)
+endif (NOT DEFINED CONF_PATH)
+
+if (NOT DEFINED LOG_PATH)
+    install(DIRECTORY DESTINATION log)
+endif (NOT DEFINED LOG_PATH)
