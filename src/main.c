@@ -334,7 +334,7 @@ static void bz_print_sysinfo(struct bitzer_s *bz)
 
 static void bz_setproctitle(char **argv, const char *title)
 {
-    size_t  i, len;
+    size_t i, len;
 
     len = strlen(argv[0]);
     for (i = 0; i < len && title[i] != '\0'; i++) {
