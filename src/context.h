@@ -36,6 +36,7 @@ struct context_s {
     struct bitzer_s *instance;
     bz_log_t *log;
     signal_task_t signal_task;
+    sigset_t  origmask;
     rbtree_t  tasks_rbtree;
     rbtree_node_t sentinel;
 };

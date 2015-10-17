@@ -23,6 +23,7 @@
 
 static int task_reset(task_t *task);
 static int task_redirect_io(task_t *task);
+static int task_pre_run(task_t *task);
 
 task_t *task_create(context_t *ctx)
 {
@@ -120,6 +121,33 @@ DUP2FAILED:
     return ERROR;
 }
 
+static int task_pre_run(task_t *task)
+{
+    task_redirect_io(task);
+    if (task->dir && chdir(task->dir) < 0) {
+        bz_log_error(task->ctx->log,
+                     "change working directory failed, task: %s, error: %s",
+                     task->name, strerror(errno));
+        return ERROR;
+    }
+
+    if (setenv("_", task->path, 1) < 0) {
+        bz_log_error(task->ctx->log,
+                     "set env _ failed, task: %s, error: %s",
+                     task->name, strerror(errno));
+        return ERROR;
+    }
+
+    if (sigprocmask(SIG_SETMASK, &task->ctx->origmask, NULL) < 0) {
+        bz_log_error(task->ctx->log,
+                     "change back signal mask failed, task: %s, error: %s",
+                     task->name, strerror(errno));
+        return ERROR;
+    }
+
+    return OK;
+}
+
 int task_run(task_t *task)
 {
     int ret;
@@ -136,17 +164,7 @@ int task_run(task_t *task)
     pid = fork();
     switch(pid) {
     case 0:
-        task_redirect_io(task);
-        if (task->dir && chdir(task->dir) < 0) {
-            bz_log_error(task->ctx->log,
-                         "change working directory failed, task: %s, error: %s",
-                         task->name, strerror(errno));
-            _exit(ERROR);
-        }
-        if (setenv("_", task->path, 1) < 0) {
-            bz_log_error(task->ctx->log,
-                         "set env _ failed, task: %s, error: %s",
-                         task->name, strerror(errno));
+        if (task_pre_run(task) != OK) {
             _exit(ERROR);
         }
         ret = execv(task->path, task->args);

@@ -29,7 +29,7 @@ sig_atomic_t  bz_reconfigure;
 sig_atomic_t  bz_reopen;
 sig_atomic_t  bz_child;
 
-static int context_sigmask(sigset_t *mask, sigset_t *origmask);
+static int context_sigmask(context_t *ctx, sigset_t *mask);
 static int context_event_handler(context_t *ctx);
 static task_t *context_find_task(context_t *ctx, pid_t pid);
 static int context_start_tasks(context_t *ctx);
@@ -78,9 +78,9 @@ void context_set_signal_callback(context_t *ctx, signal_callback_t cb, void *arg
 void context_run(context_t *ctx)
 {
     int ret;
-    sigset_t mask, origmask;
+    sigset_t mask;
 
-    if (context_sigmask(&mask, &origmask) < 0) {
+    if (context_sigmask(ctx, &mask) < 0) {
         bz_log_error(ctx->log, "set signal mask failed: %s", strerror(errno));
         return;
     }
@@ -88,7 +88,7 @@ void context_run(context_t *ctx)
     context_start_tasks(ctx);
 
     while (1) {
-        ret = pselect(0, NULL, NULL, NULL, NULL, &origmask);
+        ret = pselect(0, NULL, NULL, NULL, NULL, &ctx->origmask);
         if (ret < 0 && errno == EINTR) {
             context_event_handler(ctx);
             if (ctx->signal_task.callback) {
@@ -115,7 +115,7 @@ void context_close(context_t *ctx)
     free(ctx);
 }
 
-static int context_sigmask(sigset_t *mask, sigset_t *origmask)
+static int context_sigmask(context_t *ctx, sigset_t *mask)
 {
     sigemptyset(mask);
     sigaddset(mask, SIGCHLD);
@@ -125,7 +125,7 @@ static int context_sigmask(sigset_t *mask, sigset_t *origmask)
     sigaddset(mask, signal_value(SIGNAL_RECONFIGURE));
     sigaddset(mask, signal_value(SIGNAL_REOPEN));
 
-    return sigprocmask(SIG_BLOCK, mask, origmask);
+    return sigprocmask(SIG_BLOCK, mask, &ctx->origmask);
 }
 
 static int context_event_handler(context_t *ctx)
