@@ -143,6 +143,12 @@ int task_run(task_t *task)
                          task->name, strerror(errno));
             _exit(ERROR);
         }
+        if (setenv("_", task->path, 1) < 0) {
+            bz_log_error(task->ctx->log,
+                         "set env _ failed, task: %s, error: %s",
+                         task->name, strerror(errno));
+            _exit(ERROR);
+        }
         ret = execv(task->path, task->args);
         if (ret < 0) {
             bz_log_error(task->ctx->log,
