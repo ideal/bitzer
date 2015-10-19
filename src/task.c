@@ -131,7 +131,14 @@ static int task_pre_run(task_t *task)
         return ERROR;
     }
 
-    if (setenv("_", task->path, 1) < 0) {
+    if (task->dir && setenv("PWD", task->dir, /* overwrite = */ 1) < 0) {
+        bz_log_error(task->ctx->log,
+                     "set env PWD failed, task: %s, error: %s",
+                     task->name, strerror(errno));
+        return ERROR;
+    }
+
+    if (setenv("_", task->path, /* overwrite = */ 1) < 0) {
         bz_log_error(task->ctx->log,
                      "set env _ failed, task: %s, error: %s",
                      task->name, strerror(errno));
