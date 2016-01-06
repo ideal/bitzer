@@ -202,7 +202,7 @@ static int context_start_tasks(context_t *ctx)
         if (task_run(task) == OK) {
             // add to rbtree
             rbtree_insert(&ctx->tasks_rbtree, &task->node);
-            bz_log(ctx->log, BZ_LOG_INFO, "starting task succeed, name: %s", task->name);
+            bz_log(ctx->log, BZ_LOG_INFO, "starting task succeed, name: %s, pid: %d", task->name, task->pid);
         } else {
             bz_log_error(ctx->log, "starting task failed, name: %s", task->name);
         }
@@ -218,7 +218,7 @@ static int context_restart_task(context_t *ctx, task_t *task)
     if (task_run(task) == OK) {
         // add to rbtree again
         rbtree_insert(&ctx->tasks_rbtree, &task->node);
-        bz_log(ctx->log, BZ_LOG_INFO, "restarting task succeed, name: %s", task->name);
+        bz_log(ctx->log, BZ_LOG_INFO, "restarting task succeed, name: %s, pid: %d", task->name, task->pid);
         return OK;
     }
 
