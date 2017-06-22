@@ -1,5 +1,7 @@
 # Bitzer
 
+[![Build Status]][Travis CI]
+
 Bitzer is an application that can be used to run and manage a number of processes on UNIX-like operating systems. It's much like [supervisord](http://supervisord.org/) and [supervise](http://cr.yp.to/daemontools/supervise.html).
 
 What Bitzer do is quite simple currently. When Bitzer starts, it starts a number of processes based on your config, and then going to sleep. At sometime when one of the processes exits due to some reason, it will restart the process automatically.
@@ -50,3 +52,6 @@ The name
 =======
 
 [`Bitzer`](http://shaunthesheep.wikia.com/wiki/Bitzer) is a sheepdog in `Shaun the Sheep`.
+
+[Build Status]: https://travis-ci.org/ideal/bitzer.svg?branch=master
+[Travis CI]:    https://travis-ci.org/ideal/bitzer
